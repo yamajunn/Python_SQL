@@ -1,5 +1,6 @@
 import sqlite3
 import numpy as np
+from create_table import create_table
 from show_table import show_table
 from show_help import show_help
 
@@ -29,63 +30,7 @@ while True:
     elif num in OK_DICT["OK2"]:
         show_table(cur, sp)
     elif num in OK_DICT["OK3"]:
-        print("<<テーブルを作成>>")
-        column_list = np.array([])
-        while True:
-            table_name = input("テーブル名 >> ")
-            print("<<カラム名を入力　';'で完了>>")
-
-            while True:
-                column_name = input("カラム名 >> ")
-                if column_name == ";":
-                    break
-                column_list = np.append(column_list, column_name)
-
-            while True:
-                print("<<これで完了ですか？>>")
-                create_bool = input("y/n >> ")
-                if create_bool == "y" or create_bool == "n":
-                    break
-                else:
-                    print("<< y か n を入力>>")
-            if create_bool == "y":
-                print("<<作成完了>>")
-                break
-            else:
-                while True:
-                    print("<<何か入力し直しますか？>>\n1: テーブル名\n2: カラム\n3: いいえ")
-                    select_num = input("番号を入力 >> ")
-                    if select_num == "1":
-                        table_name = input("テーブル名 >> ")
-                    elif select_num == "2":
-                        while True:
-                            print("<<どのカラムを修正しますか？>>")
-                            for i, item in enumerate(column_list):
-                                print(f"{i}: {item}")
-                            print(f"{len(column_list)}: <新しく追加>")
-                            print(f"{len(column_list)+1}: <修正しない>")
-                            select_num = input("番号を入力 >> ")
-                            if select_num.isdecimal():
-                                if int(select_num) == len(column_list):
-                                    print("<<カラム名を入力　';'で完了>>")
-                                    while True:
-                                        column_name = input("カラム名 >> ")
-                                        if column_name == ";":
-                                            break
-                                        column_list = np.append(column_list, column_name)
-                                elif int(select_num) == len(column_list)+1:
-                                    break
-                                else:
-                                    column_name = input("カラム名 >> ")
-                                    column_list[int(select_num)] = column_name
-                            else:
-                                print("<<無効な値>>")
-                    elif select_num == "3":
-                        break
-                    else:
-                        print("<<無効な値>>")
-                print("<<作成完了>>")
-                break
+        create_table(cur, sp)
     else:
         print("<<無効な値>> 1 でヘルプ")
         print("="*sp)
