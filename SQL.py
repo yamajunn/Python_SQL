@@ -10,7 +10,12 @@ dbname = 'data.sqlite3'
 conn = sqlite3.connect(dbname)
 # sqliteを操作するカーソルオブジェクトを作成
 cur = conn.cursor()
-
+cur.execute("select * from sqlite_master where type='table'")
+table_list = np.array([])
+for item in cur.fetchall():
+    table_list = np.append(table_list, item[1])
+print(table_list)
+    
 sp = 100
 OK_DICT = {
     "OK0": ["SQLを終了", "0", "exit", "終了"],
@@ -30,7 +35,7 @@ while True:
     elif num in OK_DICT["OK2"]:
         show_table(cur, sp)
     elif num in OK_DICT["OK3"]:
-        create_table(cur, sp)
+        create_table(cur, sp, table_list)
     else:
         print("<<無効な値>> 1 でヘルプ")
         print("="*sp)

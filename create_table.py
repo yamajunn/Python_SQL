@@ -1,20 +1,54 @@
 import numpy as np
-def create_table(cur, sp):
+
+def add_column(sp, column_list, second_bool):
+    while True:
+        while True:
+            column_name = input("カラム名 >> ")
+            if column_name == "" and second_bool:
+                print("-"*sp)
+                print("<<カラム名を入力して下さい(最低1つ)>>")
+            elif not second_bool:
+                break
+            else:
+                break
+        if column_name == ";" and second_bool:
+            if len(column_list) == 0:
+                print("-"*sp)
+                print("<<カラム名を入力して下さい(最低1つ)>>")
+                continue
+            else:
+                print("-"*sp)
+                break
+        elif column_name != "" and column_name != ";" and column_name[len(column_name)-1] == ";" and second_bool:
+            print("-"*sp)
+            column_list = np.append(column_list, column_name[:len(column_name)-1])
+            break
+        elif column_name == "" and not second_bool:
+            break
+        elif column_name == ";" and not second_bool:
+            break
+        elif column_name != ";" and column_name[len(column_name)-1] == ";" and not second_bool:
+            print("-"*sp)
+            column_list = np.append(column_list, column_name[:len(column_name)-1])
+            break
+        column_list = np.append(column_list, column_name)
+    return column_list
+
+
+def create_table(cur, sp, table_list):
     print("<<テーブルを作成>>")
     print("-"*sp)
     column_list = np.array([])
     while True:
-        table_name = input("テーブル名 >> ")
-        print("-"*sp)
-        print("<<カラム名を入力　';'で完了>>")
-
         while True:
-            column_name = input("カラム名 >> ")
-            if column_name == ";":
-                print("-"*sp)
+            table_name = input("テーブル名 >> ")
+            print("-"*sp)
+            if table_name in table_list:
+                print("<<このテーブル名はすでに使用されています。>>")
+            else:
                 break
-            column_list = np.append(column_list, column_name)
-
+        print("<<カラム名を入力　';'で完了>>")
+        column_list = add_column(sp, column_list, True)
         while True:
             print("<<これで完了ですか？>>")
             create_bool = input("y/n >> ")
@@ -34,7 +68,13 @@ def create_table(cur, sp):
                 if select_num == "1":
                     print("-"*sp)
                     print("<<テーブル名を入力>>")
-                    table_name = input("テーブル名 >> ")
+                    while True:
+                        table_name = input("テーブル名 >> ")
+                        print("-"*sp)
+                        if table_name in table_list:
+                            print("<<このテーブル名はすでに使用されています。>>")
+                        else:
+                            break
                 elif select_num == "2":
                     print("-"*sp)
                     while True:
@@ -48,11 +88,7 @@ def create_table(cur, sp):
                         if select_num.isdecimal() and int(select_num) <= len(column_list)+1:
                             if int(select_num) == len(column_list):
                                 print("<<カラム名を入力　';'で完了>>")
-                                while True:
-                                    column_name = input("カラム名 >> ")
-                                    if column_name == ";":
-                                        break
-                                    column_list = np.append(column_list, column_name)
+                                column_list = add_column(sp, column_list, False)
                             elif int(select_num) == len(column_list)+1:
                                 break
                             else:
